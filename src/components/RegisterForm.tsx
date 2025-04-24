@@ -14,7 +14,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^[6-9]\d{9}$/, "Invalid phone number")
     .required("Phone is required"),
-  gender: yup.string().required("Gender is required"),
+  gender: yup.string().oneOf(["Male","Female","Non-Binary"],"Select a valid gender"),
   dob: yup.string().required("Date of Birth is required"),
   role: yup
     .string()
@@ -57,7 +57,7 @@ const RegisterForm: React.FC = () => {
       });
 
       alert("Registration successful!");
-      navigate("/login");
+      navigate("/");
     } catch (error: any) {
       alert("Registration failed: " + error.message);
     }
@@ -77,8 +77,13 @@ const RegisterForm: React.FC = () => {
         <input {...register("phone")} placeholder="Phone Number" className="w-full p-2 border rounded" />
         {errors.phone && <p className="text-red-600">{errors.phone.message}</p>}
 
-        <input {...register("gender")} placeholder="Gender" className="w-full p-2 border rounded" />
-        {errors.gender && <p className="text-red-600">{errors.gender.message}</p>}
+
+        <select {...register("gender")} className="w-full p-2 border rounded">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Non-Binary">Non-Binary</option>
+        </select>
+        {errors.role && <p className="text-red-600">{errors.gender?.message}</p>}
 
         <input {...register("dob")} type="date" placeholder="Date of Birth" className="w-full p-2 border rounded" />
         {errors.dob && <p className="text-red-600">{errors.dob.message}</p>}

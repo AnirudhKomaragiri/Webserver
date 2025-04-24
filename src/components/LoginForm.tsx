@@ -3,9 +3,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth,db } from "../config/firebase";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -15,6 +16,8 @@ const schema = yup.object().shape({
 type FormData = yup.InferType<typeof schema>;
 
 const LoginForm: React.FC = () => {
+  const [imageUrl, setImageUrl] = useState<string>("");
+
   const {
     register,
     handleSubmit,
@@ -22,6 +25,19 @@ const LoginForm: React.FC = () => {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    const fetchHospitalImage = async () => {
+      try {
+        const response = await axios.get("https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=800&q=80");
+        setImageUrl(response.request.responseURL); // This gets the actual image URL
+      } catch (error) {
+        console.error("Failed to fetch hospital image", error);
+      }
+    };
+
+    fetchHospitalImage();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -59,6 +75,19 @@ const LoginForm: React.FC = () => {
 
         <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Login</button>
       </form>
+
+      <div className="p-6 text-center">
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Hospital"
+          className="mx-auto rounded shadow-lg w-full max-w-xl"
+        />
+      )}
+      {!imageUrl && <p>Loading hospital image...</p>}
+    </div>
+
+
     </div>
   );
 };
