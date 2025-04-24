@@ -8,6 +8,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().min(6).required("Password is required"),
@@ -30,7 +31,7 @@ const LoginForm: React.FC = () => {
     const fetchHospitalImage = async () => {
       try {
         const response = await axios.get("https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=800&q=80");
-        setImageUrl(response.request.responseURL); // This gets the actual image URL
+        setImageUrl(response.request.responseURL); 
       } catch (error) {
         console.error("Failed to fetch hospital image", error);
       }
@@ -64,7 +65,7 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-xl" >
       <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <input {...register("email")} placeholder="Email" className="w-full p-2 border rounded" />
